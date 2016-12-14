@@ -1,0 +1,64 @@
+﻿<script>
+    function edit() {
+        var id = document.querySelectorAll('input[name=rad]:checked');
+        
+        
+        if (id.length > 0)
+        {
+            window.location.href = "/Product/Add?id=" + id[0].id;
+            
+        }else
+        {
+            alert("None Selected");
+        }
+        
+    }
+    function del() {
+        var id = document.querySelectorAll('input[name=rad]:checked');
+        if (id.length > 0)
+        {
+            jQuery.ajax({
+                type: "POST",
+                url: "/Product/Delete",
+                data: {
+                    id: id[0].id,
+                },
+                success: function (data) {
+                    document.getElementById("confirm").innerHTML = data;
+                    window.location.href = "/Product/Index";
+                }
+            });
+        }else
+        {
+            alert("None Selected");
+        }
+    }
+</script> 
+
+
+<div class="col-md-12">
+
+    <table>
+        <tr>
+            <th width ="60">Select</th>
+            <th width ="100">Name </th>
+            <th width ="70 ">price</th>
+        </tr>
+        @foreach (var row in ViewBag.result)
+        {   <tr>
+                <td><input type="radio" name="rad" id="@row.id"/></td>
+                <td>@row.name</td>
+                <td>@row.price</td>
+            </tr>
+        } 
+        <tr>
+            <td><a href="/Product/Add"><button>Add</button></a></td>
+            <td><button onclick="edit();">Edit</button></td>
+            <td><button onclick="del();">Delete</button></td>
+        </tr>
+        <tr>
+            <td><span id="confirm"></span></td>
+        </tr>
+    </table>
+</div>
+

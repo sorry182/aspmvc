@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "History";
+}
+<script>
+    function modify(mode)
+    {
+        var cb = document.querySelectorAll('input[name=mycheckboxes]:checked');
+        
+        var ids = new Array();
+        var sid = "";
+        
+        for (var i=0; i<cb.length; i++)
+        {
+            // alert(cb[i].id);
+            ids[i] = cb[i].id;
+            sid += cb[i].id + ",";
+        }
+        
+        if (mode == 'delete')
+        {
+            
+            jQuery.ajax({
+                type: "POST",
+                url: "/Home/Delete",
+                data: {
+                    ids: sid
+                },
+                success: function (data) {
+
+                }
+            });
+        }
+
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12" style="height: 600px;overflow-y: scroll;">
+        <h2>Mortgate Calculator History</h2>
+        <table border="0">
+            <tr><th>Check</th>
+                <th>Id</th>
+                <th width="180"><center/>Date</th>
+                <th width="150"><center/>Mortgage Amount ($)</th>
+                <th width="150"><center/>Amortization (Years)</th>
+                <th width="100"><center/>Interest Rate</th>
+                <th width="100"><center/>Monthly ($)</th>
+            
+            </tr>
+            
+            @foreach(var row in @ViewBag.result)
+            {   var i = "tr"+ @row.Id.ToString();
+                   
+                
+                <tr id=@i>
+                <td><input type="checkbox" name ="mycheckboxes" id="@row.Id"/></td>
+                <td>@row.Id</td>
+                <td>@row.Date</td>
+                <td  style="text-align:right"><input type="text" name="@row.Id" value="@row.Principal"/></td>
+                <td  style="text-align:center"><input type="text" name="@row.Id" value="@row.Years" /></td>
+                <td  style="text-align:right"><input type="text" name="@row.Id" value="@row.Rate" /></td>
+                <td  style="text-align:right"><input type="text" name="@row.Id" value="@row.Monthly" /></td>
+                </tr>
+            }
+            <tr><td><button onclick="modify('edit');">Edit</button></td></tr>
+            <tr><td><button onclick="modify('delete');">Delete</button></td></tr>
+        </table>
+
+    </div>
+    
+</div>

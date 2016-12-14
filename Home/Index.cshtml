@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script>
+    $(document).ready(function() {
+        $("#email").hide();
+        $("#ebutton").hide();
+        $("#monthly").hide();
+    });
+
+    function calculate()
+    {
+        principal = document.getElementById("principal").value;
+        years = document.getElementById("years").value;
+        rate = document.getElementById("rate").value/100;
+        payments = 12 // monthly
+        if(principal && years && rate)
+        {
+            if(!isNaN(principal) && !isNaN(years) && !isNaN(rate))
+            {
+                r = rate / payments;    //interest per month
+                n = payments * years;   //number of payments
+                temp = Math.pow((1+r),n);
+                monthly = (principal * r * temp) / (temp - 1);
+                document.getElementById("monthly_payment").innerHTML = monthly.toFixed(2);
+                
+                $('#email').show();
+                $('#monthly').show();
+                $('#ebutton').show();
+                
+                jQuery.ajax({
+                    type: "POST",
+                    url: "/Home/InsertResult",
+                    data: {
+                        principal: principal,
+                        years: years,
+                        rate: rate,
+                        monthly: monthly
+
+                    },
+                    success: function (data) {
+                    }
+                });
+                
+                return false;
+            }else
+            {
+                alert('enter valid values');
+            }
+        }else
+        {
+            alert('missing required values');
+        }
+    }
+    function sendemail()
+    {
+        principal = document.getElementById("principal").value;
+        years = document.getElementById("years").value;
+        rate = document.getElementById("rate").value;
+        monthly = document.getElementById("monthly_payment").innerHTML;
+        email = document.getElementById("email").value;
+        jQuery.ajax({
+            type: "POST",
+            url: "/Home/Email",
+            data: {
+                principal: principal,
+                years: years,
+                rate: rate,
+                monthly: monthly,
+                email: email
+            },
+            success: function (data) {
+                document.getElementById("error").innerHTML=data;
+            }
+        });
+                
+        return false;
+        
+    }
+    
+
+
+</script>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Mortgate Calculator</h2>
+       
+        <table border="0">
+            <tr>
+                <td width="200">Mortgage Amount</td>
+                <td width="50">$</td>
+                <td width="10"> <input type="text" id="principal" maxlength="7" size="7"  style="text-align:right"/></td>
+            </tr>
+            <tr>
+                <td>Amortization</td>
+                <td>Years</td>
+                <td align="right"><input type="text" id ="years" maxlength ="2"size="7" style="text-align:right"/></td>
+            </tr>
+            <tr>
+                <td> Interest Rate</td>
+                <td> %</td>
+                <td align="right"> <input type="text" id="rate" maxlength="3" size="7"  value="3" style="text-align:right"/></td>
+            </tr>
+            <tr>
+                
+            <tr>
+                <td> <button onclick="calculate();">Calculate</button></td>
+            </tr>
+            <tr>
+                <td><input type="email" id="email" placeholder="email@example.com" /></td>
+                <td><button id="ebutton" onclick="sendemail();"> Email</button></td>
+               
+            </tr>
+            <tr>
+                <td><span id="error"></span></td>
+            </tr>
+        </table>
+              
+    </div>
+    <div class="col-md-4">
+        <br />
+        <br />
+        <br />
+        <p id="monthly"> Your Monthly Payment is $<span id="monthly_payment"></span></p>
+    </div>
+</div>
+

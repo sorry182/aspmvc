@@ -1,0 +1,92 @@
+﻿
+@{ 
+    var wmode = 0;
+    if (ViewBag.mode == "Edit" && ViewBag.result != null)
+    {   //Edit
+        wmode = 1;
+    }
+
+}
+<script>
+    function edit(id)
+    {
+        var name = document.getElementById("name").value;
+        var price = document.getElementById("price").value;
+        jQuery.ajax({
+                type: "POST",
+                url: "/Product/Update",
+                data: {
+                    id:id,
+                    name: name,
+                    price: price
+                },
+                success: function (data) {
+                    document.getElementById("confirm").innerHTML = data;
+                }
+        });
+        
+
+    }
+
+    function add() {
+        
+        var name = document.getElementById("name").value;
+        var price = document.getElementById("price").value;
+        
+        jQuery.ajax({
+            type: "POST",
+            url: "/Product/Insert",
+            data: {
+                
+                name: name,
+                price: price
+            },
+            success: function (data) {
+                document.getElementById("confirm").innerHTML = data;
+            }
+        });
+
+
+    }
+</script>
+<h2>Product @ViewBag.mode</h2>
+<div class="col-md-12">
+
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td><input type="text" id="name" value="@{ if(wmode==1)
+                {
+                   @ViewBag.result.name;
+                }
+
+            }"/></td>
+        </tr>
+        <tr>
+            <td>Price:</td>
+            <td><input type="text" id="price" value="@{ if(wmode==1)
+                {
+                   @ViewBag.result.price;
+                }
+
+            }"/></td>
+        </tr>
+        <tr>
+            @{
+                if (wmode == 1)
+                {
+                    <td><button onclick="edit(@ViewBag.result.id);">Edit</button></td>
+                }
+                else
+                {
+                    <td><button onclick="add();">Add</button></td>
+                }
+            }
+            <td><a href="/Product/Index">Back</a></td>
+        </tr>
+        <tr>
+            <td><span id="confirm"></span></td>
+        </tr>
+    </table>
+</div>
+
