@@ -39,17 +39,17 @@ string con_string()
 
 Query
 {
-SqlConnection con = new SqlConnection(con_string());
-            con.Open();
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = "select * from product";
-            SqlDataReader reader = cmd.ExecuteReader();
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {   Product p = new Product();
-                    p.id = reader.GetInt32(0);
+   SqlConnection con = new SqlConnection(con_string());
+   con.Open();
+   SqlCommand cmd = new SqlCommand();
+   cmd.Connection = con;
+   cmd.CommandText = "select * from product";
+   SqlDataReader reader = cmd.ExecuteReader();
+   if (reader.HasRows)
+   {
+       while (reader.Read())
+       {   Product p = new Product();
+                   p.id = reader.GetInt32(0);
                     p.name = reader.GetString(1);
                     p.price = reader.GetDecimal(2);
                     list.Add(p);
