@@ -34,16 +34,14 @@ WEB.CONFIG
   
 string con_string()
 {
-    return ConfigurationManager.ConnectionStrings["conn"].ToString();
+    return "Data Source = (localdb)\\ProjectsV13; Initial Catalog = mortgage; Integrated Security = True";
 }
 
 Query
 {
    SqlConnection con = new SqlConnection(con_string());
-   con.Open();
-   SqlCommand cmd = new SqlCommand();
-   cmd.Connection = con;
-   cmd.CommandText = "select * from product";
+   SqlCommand cmd = new SqlCommand(query, con);
+   cmd.Connection.Open();
    SqlDataReader reader = cmd.ExecuteReader();
    if (reader.HasRows)
    {
@@ -63,11 +61,9 @@ Update
 
  public int EUpdate(string query)
 {
-            SqlConnection con = new SqlConnection(con_string());
-            con.Open();
-            SqlCommand cmd = new SqlCommand();
-            cmd.Connection = con;
-            cmd.CommandText = query;
+           SqlConnection con = new SqlConnection(con_string());
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Connection.Open();
             int res = cmd.ExecuteNonQuery();
             con.Close();
             return res;
