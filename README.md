@@ -41,6 +41,7 @@ WEB.CONFIG
 string con_string()
 {
     return "Data Source = (localdb)\\ProjectsV13; Initial Catalog = mortgage; Integrated Security = True";
+    //return ConfigurationManager.ConnectionStrings["conn"].ToString();
 }
 
 Query
