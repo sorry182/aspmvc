@@ -8,8 +8,14 @@ Conversion
 Convert.ToInt32(Request["id"]);
 Convert.ToDecimal();
 
-AJAX CALL
-
+on load
+ $(document).ready(function() {
+        $("#email").hide();
+        $("#ebutton").hide();
+        $("#monthly").hide();
+    });
+    
+ AJAX CALL
  jQuery.ajax({
                 type: "POST",
                 url: "/Product/Update",
